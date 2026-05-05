@@ -11,14 +11,15 @@
 int delete_dnodeint_at_index(dlistint_t **head, unsigned int index)
 {
 	dlistint_t *tmp;
-	unsigned int i = 0;
+	unsigned int i;
 
+	/* 1. Safety check: does the list even exist? */
 	if (head == NULL || *head == NULL)
 		return (-1);
 
 	tmp = *head;
 
-	/* Case 1: Deleting the head node (index 0) */
+	/* 2. Case: Deleting the very first node */
 	if (index == 0)
 	{
 		*head = tmp->next;
@@ -28,27 +29,25 @@ int delete_dnodeint_at_index(dlistint_t **head, unsigned int index)
 		return (1);
 	}
 
-	/* Traverse to find the node at the specified index */
-	while (tmp != NULL && i < index)
+	/* 3. Traverse to the node we want to delete */
+	for (i = 0; tmp != NULL && i < index; i++)
 	{
 		tmp = tmp->next;
-		i++;
 	}
 
-	/* Case 2: Index out of range */
+	/* 4. Case: Index is out of bounds */
 	if (tmp == NULL)
 		return (-1);
 
-	/* After finding the node 'tmp' at the correct index */
-
-    /* 1. Repair the 'next' pointer of the PREVIOUS node */
-    if (tmp->prev != NULL)
+	/* 5. The Bridge: Re-link the neighbors before freeing */
+	/* Point the PREVIOUS node's 'next' to the node AFTER tmp */
+	if (tmp->prev != NULL)
 		tmp->prev->next = tmp->next;
 
-    /* 2. Repair the 'prev' pointer of the NEXT node */
+	/* Point the NEXT node's 'prev' back to the node BEFORE tmp */
 	if (tmp->next != NULL)
 		tmp->next->prev = tmp->prev;
-	
+
 	free(tmp);
 	return (1);
 }
