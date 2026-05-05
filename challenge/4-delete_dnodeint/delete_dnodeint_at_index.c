@@ -2,52 +2,52 @@
 #include <stdlib.h>
 
 /**
- * delete_dnodeint_at_index - Delete a node at a specific index
- * @head: A pointer to the pointer of the first element
+ * delete_dnodeint_at_index - Delete a node at a specific index from a list
+ *
+ * @head: A pointer to the first element of a list
  * @index: The index of the node to delete
  *
  * Return: 1 on success, -1 on failure
  */
 int delete_dnodeint_at_index(dlistint_t **head, unsigned int index)
 {
+	dlistint_t *saved_head;
 	dlistint_t *tmp;
-	unsigned int i;
+	unsigned int p;
 
-	/* 1. Safety check: does the list even exist? */
-	if (head == NULL || *head == NULL)
-		return (-1);
-
-	tmp = *head;
-
-	/* 2. Case: Deleting the very first node */
-	if (index == 0)
+	if (*head == NULL)
 	{
-		*head = tmp->next;
-		if (*head != NULL)
-			(*head)->prev = NULL;
-		free(tmp);
-		return (1);
-	}
-
-	/* 3. Traverse to the node we want to delete */
-	for (i = 0; tmp != NULL && i < index; i++)
-	{
-		tmp = tmp->next;
-	}
-
-	/* 4. Case: Index is out of bounds */
-	if (tmp == NULL)
 		return (-1);
-
-	/* 5. The Bridge: Re-link the neighbors before freeing */
-	/* Point the PREVIOUS node's 'next' to the node AFTER tmp */
-	if (tmp->prev != NULL)
-		tmp->prev->next = tmp->next;
-
-	/* Point the NEXT node's 'prev' back to the node BEFORE tmp */
-	if (tmp->next != NULL)
-		tmp->next->prev = tmp->prev;
-
-	free(tmp);
+	}
+	saved_head = *head;
+	p = 0;
+	while (p < index && *head != NULL)
+	{
+		*head = (*head)->next;
+		p++;
+	}
+	if (p != index)
+	{
+		*head = saved_head;
+		return (-1);
+	}
+	if (0 == index)
+	{
+		tmp = (*head)->next;
+		free(*head);
+		*head = tmp;
+		if (tmp != NULL)
+		{
+			tmp->prev = NULL;
+		}
+	}
+	else
+	{
+		(*head)->prev->next = (*head)->next;
+		free(*head);
+		if ((*head)->next)
+			(*head)->next->prev = (*head)->prev;
+		*head = saved_head;
+	}
 	return (1);
 }
