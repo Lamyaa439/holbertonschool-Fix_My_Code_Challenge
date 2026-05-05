@@ -39,15 +39,16 @@ int delete_dnodeint_at_index(dlistint_t **head, unsigned int index)
 	if (tmp == NULL)
 		return (-1);
 
-	/* Case 3: Deleting a node in the middle or at the end */
-	/* Link the previous node to the next node */
-	if (tmp->prev != NULL)
+	/* After finding the node 'tmp' at the correct index */
+
+    /* 1. Repair the 'next' pointer of the PREVIOUS node */
+    if (tmp->prev != NULL)
 		tmp->prev->next = tmp->next;
 
-	/* Link the next node back to the previous node */
+    /* 2. Repair the 'prev' pointer of the NEXT node */
 	if (tmp->next != NULL)
 		tmp->next->prev = tmp->prev;
-
+	
 	free(tmp);
 	return (1);
 }
