@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 /*
     Print a square with the character #
     
@@ -13,12 +14,13 @@ if (process.argv.length <= 2) {
     process.exit(1);
 }
 
-// Changed 16 to 10 to parse as a normal decimal number
+// use base 10 (Decimal) so that 10 means 10!
 const size = parseInt(process.argv[2], 10);
 
 for (let i = 0; i < size; i++) {
     for (let j = 0; j < size; j++) {
         process.stdout.write("#");
     }
-    // Removed the process.stdout.write("\n") from here
+    // add newline to creates rows
+    process.stdout.write("\n");
 }
